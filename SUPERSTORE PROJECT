@@ -26,31 +26,84 @@ VALUES
     (15, 'Cozy Throw Blanket', 'Furnishings', 24.99, 100, 4.2);
 
 
--- 1. Write a SQL query that orders the items by price
-SELECT item_name, price
-FROM items
-ORDER BY price;
 
--- 2. Write your own SQL query that will show a statistic about the item prices, like a sum, average, minimum, maximum, or count
+/* 1) Write a SQL query that orders the items by price. 
+i start by selecting all the columns in the table to see what data i am working with*/
+
+SELECT*
+FROM superstore;
+
+/* then i move foward to write my query code*/
+
+SELECT item_name,price
+FROM superstore
+ORDER BY price DESC;
+
+/* 2) Write your own SQL query that will show a statistic about the item prices, like a sum, average, minimum, maximum, or count.*/
+
 SELECT 
-    COUNT(price) AS total_items, 
-    AVG(price) AS average_price, 
-    MIN(price) AS minimum_price, 
+    COUNT(*) AS total_items,
+    SUM(price) AS total_price,
+    AVG(price) AS average_price,
+    MIN(price) AS minimum_price,
     MAX(price) AS maximum_price
-FROM items;
+FROM superstore
+GROUP BY item_name;
 
--- 3. Write your own SQL query that will show a statistic about the price for items in the category of "Kitchen Supplies"
-SELECT 
-    COUNT(price) AS total_kitchen_items, 
-    AVG(price) AS average_kitchen_price, 
-    MIN(price) AS minimum_kitchen_price, 
-    MAX(price) AS maximum_kitchen_price
-FROM items
-WHERE category = 'Kitchen Supplies';
+/* 3) Write your own SQL query that will show a statistic about the price for items in the category of "Kitchen Supplies".*/
 
--- 4. Come up with your own question about the data and try to answer it using SQL.
--- Question: How many items have a price higher than $100?
+/*- i start by querying all the data i can have based on the "Kitchen Supplies" category, so i can the procedd to the next part of the question which is to come up with a statistics about the prices of the items unther the "Kitchen Supplies" category .*/
+
+SELECT price,item_name,category
+FROM superstore
+WHERE category="Kitchen Supplies";
+
 SELECT 
-    COUNT(item_name) AS items_above_100
-FROM items
-WHERE price > 100;
+    COUNT(*) AS total_kitchen_items,
+    SUM(price) AS total_price,
+    AVG(price) AS average_price,
+    MIN(price) AS minimum_price,
+    MAX(price) AS maximum_price
+FROM 
+    superstore
+WHERE 
+    category = 'Kitchen Supplies';
+    
+    /* 3)  Come up with your own question about the data and try to answer it using SQL. For example: How many air purifiers are in stock?
+    -1. How many items do the store have
+    -2. How many items is worth at least $100
+    -3.Which item has the highest rating
+    -4. whats the aerage prices of products pere category.*/
+    
+     /*-1. How many items do the store have*/
+
+SELECT 
+     COUNT(item_name)AS total_items
+FROM superstore;
+
+/*-2.How many items is worth at least $100*/
+
+SELECT 
+     COUNT(item_name)AS total_items
+FROM superstore
+WHERE price >=100;
+
+/*-3.Which item has the highest rating*/
+
+SELECT 
+    item_name, 
+    average_rating
+FROM 
+    superstore
+WHERE 
+    average_rating = (SELECT MAX(average_rating) FROM superstore);
+
+/*-4.whats the aerage price of products pere category*/
+
+SELECT 
+    category,
+    AVG(price) AS average_price
+FROM 
+    superstore
+GROUP BY 
+    category;
